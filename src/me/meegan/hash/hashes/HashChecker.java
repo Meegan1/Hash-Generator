@@ -1,4 +1,4 @@
-package me.meegan.hash;
+package me.meegan.hash.hashes;
 
 public interface HashChecker {
 

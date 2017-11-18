@@ -1,15 +1,23 @@
-package me.meegan.util;
+package me.meegan.hash.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 
-/**
- * Simple example of listing files and directories from a specific location, along with some useful attributes.
- *
- * @author mdixon
- *
- */
-public class FileLister {
+public class FileUtil {
+    /**
+     * Reads the contents of the specified file, and returns a byte array of the content.
+     *
+     * @param pathName
+     * @return byte array of file content.
+     * @throws IOException
+     */
+    public static byte[] readFileContent(String pathName) throws IOException {
+
+        return Files.readAllBytes(Paths.get(pathName));
+    }
 
     public static void list(String dirPath) {
 
@@ -46,5 +54,4 @@ public class FileLister {
 
         }
     }
-
 }
