@@ -1,9 +1,9 @@
 package me.meegan;
 
-import me.meegan.hash.hashes.HashFunc1;
-import me.meegan.hash.hashes.HashChecker;
+import me.meegan.hash.datastore.HashStore;
+import me.meegan.hash.util.HashFunctionNotFoundException;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 
 import static me.meegan.hash.util.HashUtil.generateHash;
 
@@ -39,29 +39,53 @@ public class HashDriver {
      */
     public static void ArgumentReader(String[] args) {
         if ( args.length > 0 ) {
-            String hashFunction = null;
-            String file = null;
-            boolean isMetaHash = optionPresent("-meta", args);
-            for (String arg : args ) {
+            String hashFunction = "HashFunc1";
+            String fileName = null;
+            for (String arg : args) {
                 System.out.println("Found argument " + arg);
-                if ( arg.startsWith("-") ) {
+                if (arg.startsWith("-")) {
                     // must be an option, so check
-                    if ( optionPresent("-help", args) ) {
+                    if (optionPresent("-help", args)) {
                         // Help option specified
                         System.out.println("Help option detected");
-                    }
-                    else if(!arg.equals("-meta"))
+                    } else if (!arg.equals("-meta") && !arg.equals("-replace") && !arg.equals("-remove"))
                         hashFunction = arg.replace("-", "");
-                }
-                else {
-                    file = arg;
-                }
+                } else
+                    fileName = arg;
             }
-            System.out.println(String.format("Hash value is %016X", generateHash(file, hashFunction, isMetaHash)));
-        }
-        else {
-            System.out.println("No Arguments specified");
-        }
 
+            try {
+                long hash = generateHash(fileName, hashFunction, optionPresent("-meta", args));
+                System.out.println(String.format("Hash value is %016X", hash));
+
+                if (optionPresent("-replace", args))
+                    if (HashStore.updateEntry(fileName, hashFunction, hash))
+                        System.out.println("Result: Entry replaced within data file.");
+                    else
+                        System.err.println("Entry does not exist.");
+
+                else if (optionPresent("-remove", args))
+                    if (HashStore.removeEntry(fileName, hashFunction))
+                        System.out.println("Result: Entry removed from data file.");
+                    else
+                        System.err.println("Entry does not exist.");
+
+                else if (HashStore.addEntry(fileName, hashFunction, hash))
+                    System.out.println("Result: New entry added to data file.");
+
+                else
+                    if (HashStore.getEntry(fileName, hashFunction).getHash() == hash)
+                        System.out.println("Result: File contents have not been changed.");
+                    else
+                        System.out.println("Result: Warning – file contents have been changed.");
+
+            } catch (FileNotFoundException e) {
+                System.err.println("Specified file/directory name does not exist : " + fileName);
+            } catch (HashFunctionNotFoundException e) {
+                System.err.println("Specified hash function does not exist.");
+            }
+        }
+        else
+            System.out.println("No Arguments specified");
     }
 }

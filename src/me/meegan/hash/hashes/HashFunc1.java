@@ -58,6 +58,27 @@ public class HashFunc1 implements HashChecker {
 
     @Override
     public long produceDirMetaHash(String path) {
-        return 0;
+        // Would normally use a specific path, for now just use current directory.
+        File directory = new File(path);
+
+        // Get a list of all files and directories.
+        File[] files = directory.listFiles();
+
+        long hash = 0;
+
+        if (files != null) {
+            // iterate over files and directories
+            for (File next : files) {
+                // Test if file (or directory)
+                boolean isFile = next.isFile();
+                if ( isFile ) {
+                    hash += next.lastModified();
+                }
+                else {
+                    hash += produceDirMetaHash(next.getAbsolutePath());
+                }
+            }
+        }
+        return hash;
     }
 }
