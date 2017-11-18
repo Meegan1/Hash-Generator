@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="46ef72f5-65a1-4cc9-90db-f348c383ae37" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/meegan/HashDriver.java" afterPath="$PROJECT_DIR$/src/me/meegan/HashDriver.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/meegan/HashGenerator.java" afterPath="$PROJECT_DIR$/src/me/meegan/HashGenerator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/meegan/hash/hashes/HashFunc1.java" afterPath="$PROJECT_DIR$/src/me/meegan/hash/hashes/HashFunc1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/meegan/hash/util/HashUtil.java" afterPath="$PROJECT_DIR$/src/me/meegan/hash/util/HashUtil.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,8 +17,8 @@
       <file leaf-file-name="HashDriver.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/me/meegan/HashDriver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="596">
-              <caret line="87" column="12" lean-forward="true" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="12" />
+            <state relative-caret-position="238">
+              <caret line="58" column="54" lean-forward="true" selection-start-line="58" selection-start-column="54" selection-end-line="58" selection-end-column="54" />
               <folding />
             </state>
           </provider>
@@ -79,8 +75,8 @@
         <option value="$PROJECT_DIR$/src/me/meegan/hash/datastore/HashEntry.java" />
         <option value="$PROJECT_DIR$/src/me/meegan/HashGenerator.java" />
         <option value="$PROJECT_DIR$/src/me/meegan/hash/util/HashUtil.java" />
-        <option value="$PROJECT_DIR$/src/me/meegan/HashDriver.java" />
         <option value="$PROJECT_DIR$/src/me/meegan/hash/datastore/HashStore.java" />
+        <option value="$PROJECT_DIR$/src/me/meegan/HashDriver.java" />
       </list>
     </option>
   </component>
@@ -314,12 +310,12 @@
       <option name="presentableId" value="Default" />
       <updated>1508725588106</updated>
       <workItem from="1508725589218" duration="250000" />
-      <workItem from="1510964033835" duration="13973000" />
+      <workItem from="1510964033835" duration="14399000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14223000" />
+    <option name="totallyTimeSpent" value="14649000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -625,8 +621,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/meegan/HashDriver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="596">
-          <caret line="87" column="12" lean-forward="true" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="12" />
+        <state relative-caret-position="238">
+          <caret line="58" column="54" lean-forward="true" selection-start-line="58" selection-start-column="54" selection-end-line="58" selection-end-column="54" />
           <folding />
         </state>
       </provider>

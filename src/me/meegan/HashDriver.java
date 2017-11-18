@@ -56,7 +56,7 @@ public class HashDriver {
 
             try {
                 long hash = generateHash(fileName, hashFunction, optionPresent("-meta", args));
-                System.out.println(String.format("Hash value is %016X", hash));
+                System.out.println(String.format("File “%s”  hash: %016X", fileName, hash));
 
                 if (optionPresent("-replace", args))
                     if (HashStore.updateEntry(fileName, hashFunction, hash))
