@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Hash Generator:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Hash_Generator_jar</output-path>
+    <root id="archive" name="Hash Generator.jar">
+      <element id="module-output" name="Hash Generator" />
+    </root>
+  </artifact>
+</component>

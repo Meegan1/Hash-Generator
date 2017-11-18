@@ -1,5 +1,6 @@
 package me.meegan;
 
+import me.meegan.hash.datastore.HashEntryNotFoundException;
 import me.meegan.hash.datastore.HashStore;
 import me.meegan.hash.util.HashFunctionNotFoundException;
 
@@ -39,48 +40,47 @@ public class HashDriver {
      */
     public static void ArgumentReader(String[] args) {
         if ( args.length > 0 ) {
-            String hashFunction = "HashFunc1";
-            String fileName = null;
+            String hashfunction = "HashFunc1"; // default to HashFunc1
+            String filename = null;
             for (String arg : args) {
-                System.out.println("Found argument " + arg);
-                if (arg.startsWith("-")) {
-                    // must be an option, so check
-                    if (optionPresent("-help", args)) {
-                        // Help option specified
-                        System.out.println("Help option detected");
-                    } else if (!arg.equals("-meta") && !arg.equals("-replace") && !arg.equals("-remove"))
-                        hashFunction = arg.replace("-", "");
+                if (arg.startsWith("-")) { // check for options
+                    // check if option is a hash function
+                    if (!arg.equals("-meta") && !arg.equals("-replace") && !arg.equals("-remove"))
+                        // get hash function
+                        hashfunction = arg.replace("-", "");
                 } else
-                    fileName = arg;
+                    filename = arg; // get filename
             }
 
             try {
-                long hash = generateHash(fileName, hashFunction, optionPresent("-meta", args));
-                System.out.println(String.format("File “%s”  hash: %016X", fileName, hash));
+                boolean isMeta = optionPresent("-meta", args);
+                long hash = generateHash(filename, hashfunction, isMeta);
+                System.out.println(String.format("File “%s”  hash: %016X", filename, hash));
 
                 if (optionPresent("-replace", args))
-                    if (HashStore.updateEntry(fileName, hashFunction, hash))
+                    if (HashStore.updateEntry(filename, hashfunction, hash))
                         System.out.println("Result: Entry replaced within data file.");
                     else
                         System.err.println("Entry does not exist.");
 
                 else if (optionPresent("-remove", args))
-                    if (HashStore.removeEntry(fileName, hashFunction))
+                    if (HashStore.removeEntry(filename, hashfunction))
                         System.out.println("Result: Entry removed from data file.");
                     else
                         System.err.println("Entry does not exist.");
-
-                else if (HashStore.addEntry(fileName, hashFunction, hash))
-                    System.out.println("Result: New entry added to data file.");
-
                 else
-                    if (HashStore.getEntry(fileName, hashFunction).getHash() == hash)
-                        System.out.println("Result: File contents have not been changed.");
-                    else
-                        System.out.println("Result: Warning – file contents have been changed.");
+                    try {
+                        if (HashStore.getEntry(filename, hashfunction, isMeta).getHash() == hash)
+                            System.out.println("Result: File contents have not been changed.");
+                        else
+                            System.out.println("Result: Warning – file contents have been changed.");
+                    } catch (HashEntryNotFoundException e) {
+                        HashStore.addEntry(filename, hashfunction, hash, isMeta);
+                        System.out.println("Result: New entry added to data file.");
+                    }
 
             } catch (FileNotFoundException e) {
-                System.err.println("Specified file/directory name does not exist : " + fileName);
+                System.err.println("Specified file/directory name does not exist : " + filename);
             } catch (HashFunctionNotFoundException e) {
                 System.err.println("Specified hash function does not exist.");
             }

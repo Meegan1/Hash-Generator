@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class HashStore {
-    private static ArrayList<HashEntry> hashList = new ArrayList<>();
+    private static ArrayList<HashEntry> hashList = loadData();
     private static final String HASH_FILE = "hash.store";
 
     public static boolean addEntry(String fileName, String hashFunction, long hash) {
@@ -13,7 +13,7 @@ public class HashStore {
     }
 
     public static boolean addEntry(String fileName, String hashFunction, long hash, boolean isMeta) {
-        if(hasEntry(fileName, hashFunction))
+        if(hasEntry(fileName, hashFunction, isMeta))
             return false;
 
         hashList.add(new HashEntry(fileName, hashFunction, hash, isMeta));
@@ -22,10 +22,14 @@ public class HashStore {
     }
 
     public static boolean removeEntry(String fileName, String hashFunction) {
+        return removeEntry(fileName, hashFunction, false);
+    }
+
+    public static boolean removeEntry(String fileName, String hashFunction, boolean isMeta) {
         Iterator<HashEntry> iterator = hashList.iterator();
         while(iterator.hasNext()) {
             HashEntry entry = iterator.next();
-            if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction)) {
+            if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta) {
                 iterator.remove();
                 saveData();
                 return true;
@@ -39,9 +43,9 @@ public class HashStore {
     }
 
     public static boolean updateEntry(String fileName, String hashFunction, long hash, boolean isMeta) {
-        for(HashEntry hashEntry : hashList) {
-           if(hashEntry.getFileName().equals(fileName) && hashEntry.getHashFunction().equals(hashFunction) && hashEntry.isMeta() == isMeta) {
-               hashEntry.setHash(hash);
+        for(HashEntry entry : hashList) {
+           if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta) {
+               entry.setHash(hash);
                saveData();
                return true;
            }
@@ -54,26 +58,26 @@ public class HashStore {
     }
 
     public static boolean hasEntry(String fileName, String hashFunction, boolean isMeta) {
-        for (HashEntry hashEntry : hashList) {
-            if(hashEntry.getFileName().equals(fileName) && hashEntry.getHashFunction().equals(hashFunction) && hashEntry.isMeta() == isMeta)
+        for (HashEntry entry : hashList) {
+            if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta)
                 return true;
         }
         return false;
     }
 
-    public static HashEntry getEntry(String fileName, String hashFunction) {
+    public static HashEntry getEntry(String fileName, String hashFunction) throws HashEntryNotFoundException {
         return getEntry(fileName, hashFunction, false);
     }
 
-    public static HashEntry getEntry(String fileName, String hashFunction, boolean isMeta) {
-        for (HashEntry hashEntry : hashList) {
-            if(hashEntry.getFileName().equals(fileName) && hashEntry.getHashFunction().equals(hashFunction) && hashEntry.isMeta() == isMeta)
-                return hashEntry;
+    public static HashEntry getEntry(String fileName, String hashFunction, boolean isMeta) throws HashEntryNotFoundException {
+        for (HashEntry entry : hashList) {
+            if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta)
+                return entry;
         }
-        return null;
+        throw new HashEntryNotFoundException();
     }
 
-    public static void saveData() {
+    private static void saveData() {
         try {
             FileOutputStream fout = new FileOutputStream(HASH_FILE);
             ObjectOutputStream out = new ObjectOutputStream(fout);
@@ -85,12 +89,12 @@ public class HashStore {
     }
 
     @SuppressWarnings("unchecked")
-    public static void loadData() throws FileNotFoundException {
+    private static ArrayList<HashEntry> loadData() {
         try {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(HASH_FILE));
-            hashList = (ArrayList<HashEntry>) in.readObject();
+            return (ArrayList<HashEntry>) in.readObject(); // return list from HASH_FILE
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            return new ArrayList<>(); // return empty/new list if fails
         }
     }
 }

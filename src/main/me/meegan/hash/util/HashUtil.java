@@ -1,8 +1,6 @@
 package me.meegan.hash.util;
 
-import me.meegan.hash.datastore.HashStore;
 import me.meegan.hash.hashes.HashChecker;
-import me.meegan.hash.hashes.HashFunc1;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -21,18 +21,17 @@ public class HashFunc1 implements HashChecker {
 
         // Dump byte array contents and total the values.
         for (byte b : bytes) {
-            total += b * 13;
+            total += b * 29;
         }
 
         // create a very simple hash (total of byte values, each multiplied by a prime number, all of which is multiplied by file size)
-        total *= length * 997;
+        total *= length * 743;
 
         return total;
     }
 
     @Override
     public long produceDirHash(String path) {
-        // Would normally use a specific path, for now just use current directory.
         File directory = new File(path);
 
         // Get a list of all files and directories.
@@ -42,14 +41,14 @@ public class HashFunc1 implements HashChecker {
 
         if (files != null) {
             // iterate over files and directories
-            for (File next : files) {
+            for (File file : files) {
                 // Test if file (or directory)
-                boolean isFile = next.isFile();
+                boolean isFile = file.isFile();
                 if ( isFile ) {
-                    hash += produceFileHash(next.getAbsolutePath());
+                    hash += produceFileHash(file.getAbsolutePath()); // run hash algorithm on file and add to total
                 }
                 else {
-                    hash += produceDirHash(next.getAbsolutePath());
+                    hash += produceDirHash(file.getAbsolutePath()); // recursive search through all files in folder
                 }
             }
         }
@@ -58,27 +57,35 @@ public class HashFunc1 implements HashChecker {
 
     @Override
     public long produceDirMetaHash(String path) {
-        // Would normally use a specific path, for now just use current directory.
         File directory = new File(path);
 
         // Get a list of all files and directories.
         File[] files = directory.listFiles();
 
-        long hash = 0;
+        long total = 0;
+        int totalSize = 0;
 
         if (files != null) {
             // iterate over files and directories
-            for (File next : files) {
+            for (File file : files) {
                 // Test if file (or directory)
-                boolean isFile = next.isFile();
+                boolean isFile = file.isFile();
                 if ( isFile ) {
-                    hash += next.lastModified();
+                    long filenameHash = 0;
+                    for(char c : file.getName().toCharArray()) {
+                        filenameHash += c * 29; // create a hash from the filename
+                    }
+                    total += (file.lastModified() * 29) + filenameHash ; // multiply last modified by prime number and add filenameHash
+                    totalSize += file.length(); // add file size to totalSize
                 }
                 else {
-                    hash += produceDirMetaHash(next.getAbsolutePath());
+                    total += produceDirMetaHash(file.getAbsolutePath()); // recursive search through all files in folder
                 }
             }
         }
-        return hash;
+
+        total *= totalSize * 743; // multiply by totalSize of folder * prime number
+
+        return total;
     }
 }
