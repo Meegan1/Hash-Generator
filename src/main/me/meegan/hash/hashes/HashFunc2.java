@@ -28,9 +28,8 @@ public class HashFunc2 implements HashChecker{
             total += (b << 0xF) * 7;
             total <<= 0xF;
         }
-
-        total += bytes.length % bytes[bytes.length/2];
-        //
+        // adds modulus of length and character in middle of file content
+        total += bytes.length % ((bytes[bytes.length/2] != 0) ? bytes[bytes.length/2] : 1); // if middle character = 0, return 1
         total *= length * 557;
 
         return total;
@@ -83,7 +82,9 @@ public class HashFunc2 implements HashChecker{
                         filenameHash <<= 0xF; // bit-shift whole hash
                     }
                     total += (file.lastModified() % 13) + filenameHash ; // get modulus of last modified and prime number then add to filenameHash
-                    totalSize += file.length() % file.getName().charAt(file.getName().length()/2); // add modulus of file length and char value in middle of file name to totalSize
+                    int middleChar = file.getName().charAt(file.getName().length()/2); // gets character value in middle of file name
+                    total += file.length() % (middleChar != 0 ? middleChar : 1); // add modulus of file length and char value in middle of file name to total (if 0, sets to 1)
+                    totalSize += file.length();
                 }
                 else {
                     total += produceDirMetaHash(file.getAbsolutePath()); // recursive search through all files in folder

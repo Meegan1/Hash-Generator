@@ -24,7 +24,7 @@ public class HashFunc1 implements HashChecker {
             total += b * 29;
         }
 
-        // create a very simple hash (total of byte values, each multiplied by a prime number, all of which is multiplied by file size)
+        // total of byte values multiplied by (file size * a prime number)
         total *= length * 743;
 
         return total;

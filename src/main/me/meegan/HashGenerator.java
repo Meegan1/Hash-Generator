@@ -1,9 +1,15 @@
 package me.meegan;
 
-import java.io.FileNotFoundException;
-
+/**
+ * Hash Generator Application main class
+ */
 public class HashGenerator {
-    public static void main(String[] args) throws FileNotFoundException {
-        HashDriver.ArgumentReader(args);
+
+    /**
+     * Entry-point for application
+     * @param args command-line arguments
+     */
+    public static void main(String[] args) {
+        HashDriver.ArgumentReader(args); // sends arguments to ArgumentReader
     }
 }

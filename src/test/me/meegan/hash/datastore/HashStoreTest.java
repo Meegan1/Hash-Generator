@@ -1,17 +1,29 @@
 package me.meegan.hash.datastore;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class HashStoreTest {
+    @Before
+    public void setUp() throws Exception {
+        // sets up default entries
+        HashStore.addEntry(".", "HashFunc1", 10203, false);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        // removes default entries
+        HashStore.removeEntry(".", "HashFunc1", false);
+    }
 
     @Test
     public void testAddEntry() throws Exception {
-        HashStore.addEntry(".", "HashFunc1", 10203, false);
-        assertEquals(10203, HashStore.getEntry(".", "HashFunc1").getHash());
+        HashStore.addEntry("README.md", "HashFunc1", 40123);
+        assertEquals(40123, HashStore.getEntry("README.md", "HashFunc1").getHash());
     }
 
     @Test

@@ -10,10 +10,7 @@ import static me.meegan.hash.util.HashUtil.generateHash;
 
 
 /**
- * Shows hows to read arguments specified by the user on command line.
- *
- * @author mdixon
- *
+ * Driver for Hash Generator Command-Line Application
  */
 public class HashDriver {
 
@@ -34,48 +31,48 @@ public class HashDriver {
     }
 
     /**
-     *
+     *  Reads the arguments from args parameter and runs specified options
      *
      * @param args the argument array
      */
     public static void ArgumentReader(String[] args) {
         if ( args.length > 0 ) {
-            String hashfunction = "HashFunc1"; // default to HashFunc1
+            String hashFunction = "HashFunc1"; // default to HashFunc1
             String filename = null;
             for (String arg : args) {
                 if (arg.startsWith("-")) { // check for options
                     // check if option is a hash function
                     if (!arg.equals("-meta") && !arg.equals("-replace") && !arg.equals("-remove"))
                         // get hash function
-                        hashfunction = arg.replace("-", "");
+                        hashFunction = arg.replace("-", "");
                 } else
                     filename = arg; // get filename
             }
 
             try {
                 boolean isMeta = optionPresent("-meta", args);
-                long hash = generateHash(filename, hashfunction, isMeta);
-                System.out.println(String.format("File “%s”  hash: %016X", filename, hash));
+                long hash = generateHash(filename, hashFunction, isMeta);
+                System.out.println(String.format("File \"%s\"  hash: %016X", filename, hash));
 
                 if (optionPresent("-replace", args))
-                    if (HashStore.updateEntry(filename, hashfunction, hash))
+                    if (HashStore.updateEntry(filename, hashFunction, hash))
                         System.out.println("Result: Entry replaced within data file.");
                     else
                         System.err.println("Entry does not exist.");
 
                 else if (optionPresent("-remove", args))
-                    if (HashStore.removeEntry(filename, hashfunction))
+                    if (HashStore.removeEntry(filename, hashFunction))
                         System.out.println("Result: Entry removed from data file.");
                     else
                         System.err.println("Entry does not exist.");
                 else
                     try {
-                        if (HashStore.getEntry(filename, hashfunction, isMeta).getHash() == hash)
+                        if (HashStore.getEntry(filename, hashFunction, isMeta).getHash() == hash)
                             System.out.println("Result: File contents have not been changed.");
                         else
                             System.out.println("Result: Warning – file contents have been changed.");
                     } catch (HashEntryNotFoundException e) {
-                        HashStore.addEntry(filename, hashfunction, hash, isMeta);
+                        HashStore.addEntry(filename, hashFunction, hash, isMeta);
                         System.out.println("Result: New entry added to data file.");
                     }
 

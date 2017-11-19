@@ -4,32 +4,65 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Datastore for hash entries
+ */
 public class HashStore {
     private static ArrayList<HashEntry> hashList = loadData();
     private static final String HASH_FILE = "hash.store";
 
-    public static boolean addEntry(String fileName, String hashFunction, long hash) {
-        return addEntry(fileName, hashFunction, hash, false);
+    /**
+     * adds entry to datastore if it doesn't exits
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @param hash hash of entry
+     * @return whether entry exists
+     */
+    public static boolean addEntry(String filename, String hashFunction, long hash) {
+        return addEntry(filename, hashFunction, hash, false);
     }
 
-    public static boolean addEntry(String fileName, String hashFunction, long hash, boolean isMeta) {
-        if(hasEntry(fileName, hashFunction, isMeta))
+    /**
+     * adds entry to datastore if it doesn't exits
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @param hash hash of entry
+     * @param isMeta whether entry uses metadata
+     * @return whether entry exists
+     */
+    public static boolean addEntry(String filename, String hashFunction, long hash, boolean isMeta) {
+        if(hasEntry(filename, hashFunction, isMeta))
             return false;
 
-        hashList.add(new HashEntry(fileName, hashFunction, hash, isMeta));
+        hashList.add(new HashEntry(filename, hashFunction, hash, isMeta));
         saveData();
         return true;
     }
 
-    public static boolean removeEntry(String fileName, String hashFunction) {
-        return removeEntry(fileName, hashFunction, false);
+    /**
+     * Searches for entry and attempts to remove it from the datastore
+     *
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @return whether removal was successful
+     */
+    public static boolean removeEntry(String filename, String hashFunction) {
+        return removeEntry(filename, hashFunction, false);
     }
 
-    public static boolean removeEntry(String fileName, String hashFunction, boolean isMeta) {
+    /**
+     * Searches for entry and attempts to remove it from the datastore
+     *
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @param isMeta whether entry uses metadata
+     * @return whether removal was successful
+     */
+    public static boolean removeEntry(String filename, String hashFunction, boolean isMeta) {
         Iterator<HashEntry> iterator = hashList.iterator();
         while(iterator.hasNext()) {
             HashEntry entry = iterator.next();
-            if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta) {
+            if(entry.getFileName().equals(filename) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta) {
                 iterator.remove();
                 saveData();
                 return true;
@@ -38,13 +71,30 @@ public class HashStore {
         return false;
     }
 
-    public static boolean updateEntry(String fileName, String hashFunction, long hash) {
-        return updateEntry(fileName, hashFunction, hash, false);
+    /**
+     * Searches for entry and attempts to update it
+     *
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @param hash new hash for entry
+     * @return whether update was successful
+     */
+    public static boolean updateEntry(String filename, String hashFunction, long hash) {
+        return updateEntry(filename, hashFunction, hash, false);
     }
 
-    public static boolean updateEntry(String fileName, String hashFunction, long hash, boolean isMeta) {
+    /**
+     * Searches for entry and attempts to update it
+     *
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @param hash new hash for entry
+     * @param isMeta whether entry uses metadata
+     * @return whether removal was successful
+     */
+    public static boolean updateEntry(String filename, String hashFunction, long hash, boolean isMeta) {
         for(HashEntry entry : hashList) {
-           if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta) {
+           if(entry.getFileName().equals(filename) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta) {
                entry.setHash(hash);
                saveData();
                return true;
@@ -53,30 +103,65 @@ public class HashStore {
         return false;
     }
 
-    public static boolean hasEntry(String fileName, String hashFunction) {
-        return hasEntry(fileName, hashFunction, false);
+    /**
+     * Checks whether entry exists in datastore
+     *
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @return whether entry exists
+     */
+    public static boolean hasEntry(String filename, String hashFunction) {
+        return hasEntry(filename, hashFunction, false);
     }
 
-    public static boolean hasEntry(String fileName, String hashFunction, boolean isMeta) {
+    /**
+     * Checks whether entry exists in datastore
+     *
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @param isMeta whether entry uses metadata
+     * @return whether entry exists
+     */
+    public static boolean hasEntry(String filename, String hashFunction, boolean isMeta) {
         for (HashEntry entry : hashList) {
-            if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta)
+            if(entry.getFileName().equals(filename) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta)
                 return true;
         }
         return false;
     }
 
-    public static HashEntry getEntry(String fileName, String hashFunction) throws HashEntryNotFoundException {
-        return getEntry(fileName, hashFunction, false);
+    /**
+     * Gets {@link HashEntry} from datastore
+     *
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @return HashEntry object of specified entry
+     * @throws HashEntryNotFoundException if entry does not exist
+     */
+    public static HashEntry getEntry(String filename, String hashFunction) throws HashEntryNotFoundException {
+        return getEntry(filename, hashFunction, false);
     }
 
-    public static HashEntry getEntry(String fileName, String hashFunction, boolean isMeta) throws HashEntryNotFoundException {
+    /**
+     * Gets {@link HashEntry} from datastore
+     *
+     * @param filename absolute/relative path to file
+     * @param hashFunction specific hash function for entry
+     * @param isMeta whether entry uses metadata
+     * @return HashEntry object of specified entry
+     * @throws HashEntryNotFoundException if entry does not exist
+     */
+    public static HashEntry getEntry(String filename, String hashFunction, boolean isMeta) throws HashEntryNotFoundException {
         for (HashEntry entry : hashList) {
-            if(entry.getFileName().equals(fileName) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta)
+            if(entry.getFileName().equals(filename) && entry.getHashFunction().equals(hashFunction) && entry.isMeta() == isMeta)
                 return entry;
         }
         throw new HashEntryNotFoundException();
     }
 
+    /**
+     * Serializes hashList into HASH_FILE file
+     */
     private static void saveData() {
         try {
             FileOutputStream fout = new FileOutputStream(HASH_FILE);
@@ -88,6 +173,9 @@ public class HashStore {
         }
     }
 
+    /**
+     * @return deserialized hashList from HASH_FILE
+     */
     @SuppressWarnings("unchecked")
     private static ArrayList<HashEntry> loadData() {
         try {
