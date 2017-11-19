@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class HashStoreTest {
     @Before
@@ -36,6 +37,26 @@ public class HashStoreTest {
     public void testRemoveEntry() throws Exception {
         HashStore.removeEntry(".", "HashFunc1");
         assertFalse(HashStore.hasEntry(".", "HashFunc1"));
+    }
+
+    @Test
+    public void testGetEntry() throws HashEntryNotFoundException {
+        assertEquals(10203, HashStore.getEntry(".", "HashFunc1").getHash());
+    }
+
+    @Test
+    public void testHasEntry() throws Exception {
+        assertTrue(HashStore.hasEntry(".", "HashFunc1"));
+    }
+
+    @Test (expected = HashEntryNotFoundException.class)
+    public void testGetInvalidEntry() throws HashEntryNotFoundException {
+        HashStore.getEntry("invalidFile.invalid", "HashFunc1");
+    }
+
+    @Test
+    public void testHasInvalidEntry() throws Exception {
+        assertFalse(HashStore.hasEntry("invalidFile.invalid", "HashFunc1"));
     }
 
 }

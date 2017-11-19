@@ -3,17 +3,14 @@ package me.meegan.hash.hashes;
 import me.meegan.hash.util.FileUtil;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class HashFunc1 implements HashChecker {
     @Override
-    public long produceFileHash(String filename) {
-        byte[] bytes = new byte[0];
-        try {
-            bytes = FileUtil.readFileContent(filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public long produceFileHash(String filename) throws IOException {
+        byte[] bytes;
+        bytes = FileUtil.readFileContent(filename);
 
         int length = bytes.length;
 
@@ -31,8 +28,11 @@ public class HashFunc1 implements HashChecker {
     }
 
     @Override
-    public long produceDirHash(String path) {
+    public long produceDirHash(String path) throws IOException {
         File directory = new File(path);
+
+        if(!directory.exists())
+            throw new FileNotFoundException("Specified directory does not exist: " + path + ".");
 
         // Get a list of all files and directories.
         File[] files = directory.listFiles();
@@ -56,8 +56,11 @@ public class HashFunc1 implements HashChecker {
     }
 
     @Override
-    public long produceDirMetaHash(String path) {
+    public long produceDirMetaHash(String path) throws IOException {
         File directory = new File(path);
+
+        if(!directory.exists())
+            throw new FileNotFoundException("Specified directory does not exist: " + path + ".");
 
         // Get a list of all files and directories.
         File[] files = directory.listFiles();

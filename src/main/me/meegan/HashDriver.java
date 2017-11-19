@@ -7,6 +7,7 @@ import me.meegan.hash.util.PathNotFolderException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static me.meegan.hash.util.HashUtil.generateHash;
 
@@ -58,16 +59,16 @@ public class HashDriver {
                 System.out.println(String.format((isDirectory ? ((isMeta) ? "Directory (meta)" : "Directory") : "File") + " \"%s\"  hash: %016X", filename, hash)); // print file-type and hash
 
                 if (optionPresent("-replace", args))
-                    if (HashStore.updateEntry(filename, hashFunction, hash))
+                    if (HashStore.updateEntry(filename, hashFunction, hash, isMeta))
                         System.out.println("Result: Entry replaced within data file.");
                     else
                         System.err.println("Entry does not exist.");
 
                 else if (optionPresent("-remove", args))
-                    if (HashStore.removeEntry(filename, hashFunction))
+                    if (HashStore.removeEntry(filename, hashFunction, isMeta))
                         System.out.println("Result: Entry removed from data file.");
                     else
-                        System.err.println("Entry does not exist.");
+                        System.err.println("ERROR: Entry does not exist.");
                 else
                     try {
                         if (HashStore.getEntry(filename, hashFunction, isMeta).getHash() == hash)
@@ -79,7 +80,7 @@ public class HashDriver {
                         System.out.println("Result: New entry added to data file.");
                     }
 
-            } catch (FileNotFoundException | HashFunctionNotFoundException | PathNotFolderException e) {
+            } catch (IOException | HashFunctionNotFoundException | PathNotFolderException e) {
                 System.err.println("ERROR: " + e.getMessage());
             }
         }
