@@ -53,23 +53,23 @@ public class HashDriver {
             }
 
             try {
-                boolean isMeta = optionPresent("-meta", args);
-                long hash = generateHash(filename, hashFunction, isMeta);
-                boolean isDirectory = new File(filename).isDirectory();
-                System.out.println(String.format((isDirectory ? ((isMeta) ? "Directory (meta)" : "Directory") : "File") + " \"%s\"  hash: %016X", filename, hash)); // print file-type and hash
+                boolean isMeta = optionPresent("-meta", args); // if -meta is present in arguments
+                long hash = generateHash(filename, hashFunction, isMeta); // generate hash from options
+                boolean isDirectory = new File(filename).isDirectory(); // if file is directory or file
+                System.out.println(String.format((isDirectory ? ((isMeta) ? "Directory (meta)" : "Directory") : "File") + " \"%s\"  hash: %016X", filename, hash)); // print file/folder name and hash
 
-                if (optionPresent("-replace", args))
+                if (optionPresent("-replace", args)) // replace is selected
                     if (HashStore.updateEntry(filename, hashFunction, hash, isMeta))
                         System.out.println("Result: Entry replaced within data file.");
                     else
                         System.err.println("Entry does not exist.");
 
-                else if (optionPresent("-remove", args))
+                else if (optionPresent("-remove", args)) // remove is selected
                     if (HashStore.removeEntry(filename, hashFunction, isMeta))
                         System.out.println("Result: Entry removed from data file.");
                     else
                         System.err.println("ERROR: Entry does not exist.");
-                else
+                else // no extra option is selected, default to add entry/check change in file contents
                     try {
                         if (HashStore.getEntry(filename, hashFunction, isMeta).getHash() == hash)
                             System.out.println("Result: File contents have not been changed.");
@@ -80,8 +80,8 @@ public class HashDriver {
                         System.out.println("Result: New entry added to data file.");
                     }
 
-            } catch (IOException | HashFunctionNotFoundException | PathNotFolderException e) {
-                System.err.println("ERROR: " + e.getMessage());
+            } catch (IOException | HashFunctionNotFoundException | PathNotFolderException e) { // catch exceptions from hash methods ie. FileNotFoundException
+                System.err.println("ERROR: " + e.getMessage()); // print error message
             }
         }
         else
