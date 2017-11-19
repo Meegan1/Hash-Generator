@@ -1,9 +1,12 @@
 package me.meegan.hash.util;
 
 import me.meegan.hash.hashes.HashChecker;
+import sun.dc.path.PathError;
+import sun.dc.path.PathException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.InvalidPathException;
 
 /**
  * Utility class for hash generation
@@ -12,26 +15,32 @@ public class HashUtil {
     /**
      * Generates a hash from the given parameters
      *
-     * @param file absolute/relative path to file/folder
+     * @param filename absolute/relative path to file/folder
      * @param hashFunction case-sensitive name of hash function
      * @param isMeta whether meta data should be used instead of content
      * @return a hash for the given file/folder
      * @throws FileNotFoundException if file/folder cannot be found
      * @throws HashFunctionNotFoundException if hash function cannot be found
      */
-    public static long generateHash(String file, String hashFunction, boolean isMeta) throws FileNotFoundException, HashFunctionNotFoundException {
+    public static long generateHash(String filename, String hashFunction, boolean isMeta) throws FileNotFoundException, HashFunctionNotFoundException, PathNotFolderException {
+        if(filename == null) // check if no filename has been given
+            throw new FileNotFoundException("No file/directory has been specified.");
+
         // check if this is a known file or directory.
-        File next = new File(file);
-        if (next.exists()) {
+        File file = new File(filename);
+        if (file.exists()) {
             HashChecker checker = getHashFunction(hashFunction);
 
-            if(next.isFile())
-                return checker.produceFileHash(file);
-            else if (next.isDirectory())
-                return isMeta ? checker.produceDirMetaHash(file) : checker.produceDirHash(file);
+            if(file.isFile()) {
+                if(isMeta)
+                    throw new PathNotFolderException();
+                return checker.produceFileHash(filename);
+            }
+            else if (file.isDirectory())
+                return isMeta ? checker.produceDirMetaHash(filename) : checker.produceDirHash(filename);
         }
 
-        throw new FileNotFoundException();
+        throw new FileNotFoundException("Specified file/directory does not exist: " + filename + ".");
     }
 
     /**

@@ -3,7 +3,9 @@ package me.meegan;
 import me.meegan.hash.datastore.HashEntryNotFoundException;
 import me.meegan.hash.datastore.HashStore;
 import me.meegan.hash.util.HashFunctionNotFoundException;
+import me.meegan.hash.util.PathNotFolderException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import static me.meegan.hash.util.HashUtil.generateHash;
@@ -52,7 +54,8 @@ public class HashDriver {
             try {
                 boolean isMeta = optionPresent("-meta", args);
                 long hash = generateHash(filename, hashFunction, isMeta);
-                System.out.println(String.format("File \"%s\"  hash: %016X", filename, hash));
+                boolean isDirectory = new File(filename).isDirectory();
+                System.out.println(String.format((isDirectory ? ((isMeta) ? "Directory (meta)" : "Directory") : "File") + " \"%s\"  hash: %016X", filename, hash)); // print file-type and hash
 
                 if (optionPresent("-replace", args))
                     if (HashStore.updateEntry(filename, hashFunction, hash))
@@ -76,10 +79,8 @@ public class HashDriver {
                         System.out.println("Result: New entry added to data file.");
                     }
 
-            } catch (FileNotFoundException e) {
-                System.err.println("Specified file/directory name does not exist : " + filename);
-            } catch (HashFunctionNotFoundException e) {
-                System.err.println("Specified hash function does not exist.");
+            } catch (FileNotFoundException | HashFunctionNotFoundException | PathNotFolderException e) {
+                System.err.println("ERROR: " + e.getMessage());
             }
         }
         else

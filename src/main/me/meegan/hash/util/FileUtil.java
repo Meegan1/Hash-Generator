@@ -16,7 +16,6 @@ public class FileUtil {
      * @throws IOException if file cannot be found/read
      */
     public static byte[] readFileContent(String path) throws IOException {
-
         return Files.readAllBytes(Paths.get(path));
     }
 }
