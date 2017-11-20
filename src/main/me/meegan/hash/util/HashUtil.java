@@ -1,13 +1,10 @@
 package me.meegan.hash.util;
 
 import me.meegan.hash.hashes.HashChecker;
-import sun.dc.path.PathError;
-import sun.dc.path.PathException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.InvalidPathException;
 
 /**
  * Utility class for hash generation
@@ -22,6 +19,7 @@ public class HashUtil {
      * @return a hash for the given file/folder
      * @throws FileNotFoundException if file/folder cannot be found
      * @throws HashFunctionNotFoundException if hash function cannot be found
+     * @throws PathNotFolderException if requesting meta hash on a path that is not a folder
      */
     public static long generateHash(String filename, String hashFunction, boolean isMeta) throws IOException, HashFunctionNotFoundException, PathNotFolderException {
         if(filename == null) // check if no filename has been given

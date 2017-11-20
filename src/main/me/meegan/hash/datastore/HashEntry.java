@@ -6,10 +6,10 @@ import java.io.Serializable;
  * Entry for HashStore
  */
 public class HashEntry implements Serializable {
-    private String filename;
-    private String hashFunction;
+    private final String filename;
+    private final String hashFunction;
     private long hash;
-    private boolean isMeta;
+    private final boolean isMeta;
 
 
     /**

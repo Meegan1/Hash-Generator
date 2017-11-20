@@ -16,10 +16,20 @@ public class HashFunc1 implements HashChecker {
 
         long total = 0;
 
+        boolean isOther = false; // counter for every other character
+        long totalOtherChars = 0; // total hash of every other character
+
         // Dump byte array contents and total the values.
         for (byte b : bytes) {
             total += b * 29;
+            if(isOther) { // for every other character
+                totalOtherChars += (b << 0x5) * 7; // add character bitshifted left by 0x5 multiplied by a prime
+                totalOtherChars <<= 0xF; // bitshift total other chars left by 0xF
+            }
+            isOther = !isOther;
         }
+
+        total += totalOtherChars; // add totalOtherChars to total
 
         // total of byte values multiplied by (file size * a prime number)
         total *= length * 743;
@@ -75,9 +85,20 @@ public class HashFunc1 implements HashChecker {
                 boolean isFile = file.isFile();
                 if ( isFile ) {
                     long filenameHash = 0;
+                    boolean isOther = false; // counter for every other character
+                    long totalOtherChars = 0; // total hash of every other character
+
                     for(char c : file.getName().toCharArray()) {
                         filenameHash += c * 29; // create a hash from the filename
+
+                        if(isOther) { // for every other character
+                            totalOtherChars += (c << 0x5) * 7; // add character bitshifted left by 0x5 multiplied by a prime
+                            totalOtherChars <<= 0xF; // bitshift total other chars left by 0xF
+                        }
+                        isOther = !isOther;
                     }
+
+                    total += totalOtherChars; // add totalOtherChars to total
                     total += (file.lastModified() * 29) + filenameHash ; // multiply last modified by prime number and add filenameHash
                     totalSize += file.length(); // add file size to totalSize
                 }

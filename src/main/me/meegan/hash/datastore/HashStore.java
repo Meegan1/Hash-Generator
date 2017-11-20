@@ -8,7 +8,7 @@ import java.util.Iterator;
  * Datastore for hash entries
  */
 public class HashStore {
-    private static ArrayList<HashEntry> hashList = loadData();
+    private static final ArrayList<HashEntry> hashList = loadData();
     private static final String HASH_FILE = "hash.store";
 
     /**

@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/**
- * Created by c3497521 on 16/11/2017.
- */
 public class HashFunc2 implements HashChecker{
 
     @Override
@@ -23,10 +20,9 @@ public class HashFunc2 implements HashChecker{
         // Dump byte array contents and total the values.
         for (byte b : bytes) {
             total += (b << 0xF) * 7;
-            total <<= 0xF;
         }
         // adds modulus of length and character in middle of file content
-        total += bytes.length % ((bytes[bytes.length/2] != 0) ? bytes[bytes.length/2] : 1); // if middle character = 0, return 1
+        total += (bytes.length % ((bytes[bytes.length/2] != 0) ? bytes[bytes.length/2] : 1)) * 7; // if middle character = 0, return 1
         total *= length * 557;
 
         return total;
@@ -82,11 +78,10 @@ public class HashFunc2 implements HashChecker{
                     long filenameHash = 0;
                     for(char c : file.getName().toCharArray()) { // create a hash from the filename
                         filenameHash += (c << 0xF) * 7; // bit-shift character and multiply by prime
-                        filenameHash <<= 0xF; // bit-shift whole hash
                     }
                     total += (file.lastModified() % 13) + filenameHash ; // get modulus of last modified and prime number then add to filenameHash
                     int middleChar = file.getName().charAt(file.getName().length()/2); // gets character value in middle of file name
-                    total += file.length() % (middleChar != 0 ? middleChar : 1); // add modulus of file length and char value in middle of file name to total (if 0, sets to 1)
+                    total += (file.length() % (middleChar != 0 ? middleChar : 1)) * 7; // add modulus of file length and char value in middle of file name to total (if 0, sets to 1) all multiplied by a prime
                     totalSize += file.length();
                 }
                 else {

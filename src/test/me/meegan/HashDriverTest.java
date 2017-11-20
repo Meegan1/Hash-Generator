@@ -43,7 +43,7 @@ public class HashDriverTest {
     }
 
     @Test
-    public void testAddExistingFile() throws Exception {
+    public void testAddUpdatedFile() throws Exception {
         String[] args = {"README.md", "-HashFunc1"};
         HashDriver.ArgumentReader(args);
 
@@ -79,7 +79,7 @@ public class HashDriverTest {
     }
 
     @Test
-    public void testAddExistingDir() throws Exception {
+    public void testAddUpdatedDir() throws Exception {
         String[] args = {".", "-HashFunc2"};
         HashDriver.ArgumentReader(args);
 
@@ -115,7 +115,7 @@ public class HashDriverTest {
 }
 
     @Test
-    public void testAddExistingDirMeta() throws Exception {
+    public void testAddUpdatedDirMeta() throws Exception {
         String[] args = {".", "-HashFunc3", "-meta"};
         HashDriver.ArgumentReader(args);
 

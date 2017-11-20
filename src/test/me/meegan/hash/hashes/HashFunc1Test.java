@@ -3,10 +3,7 @@ package me.meegan.hash.hashes;
 import org.junit.*;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-
-import static org.junit.Assert.*;
 
 public class HashFunc1Test {
 

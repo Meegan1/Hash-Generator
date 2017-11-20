@@ -6,7 +6,6 @@ import me.meegan.hash.util.HashFunctionNotFoundException;
 import me.meegan.hash.util.PathNotFolderException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static me.meegan.hash.util.HashUtil.generateHash;
